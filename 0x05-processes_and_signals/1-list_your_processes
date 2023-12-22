@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#show process hierachy
+#display list of current running process
+
+ps -a -x -u -f
+

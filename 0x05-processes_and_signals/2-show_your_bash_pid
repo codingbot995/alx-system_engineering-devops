@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#you cannot use grep
+#shellcheck disable=SC2009 
+
+./1-list_your_processes | grep "bash"
