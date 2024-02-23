@@ -1,6 +1,9 @@
 ---CONFIGURATION_MANAGEMENT
+--------------------------------------
 author JAYNII
+---------------------------------------
 TASKS
+-------------------------------------------
 0. Create a file
 mandatory
 Using Puppet, create a file in /tmp.
