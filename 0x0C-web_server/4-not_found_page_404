@@ -4,6 +4,6 @@ add="error_page 404 ^/redirect(.*) https://www.google.com permanent;"
 sudo apt-get update
 sudo apt-get -y install nginx
 ufw allow 'Nginx HTTP'
-echo 'Ceci n'est pas une page' | sudo tee /var/www/html/index.html
+echo 'Hello World' | sudo tee /var/www/html/index.html
 sudo sed "/location \/ {/a $add" /etc/nginx/sites-available/default
 sudo service nginx restart
