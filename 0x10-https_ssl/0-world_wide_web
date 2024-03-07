@@ -1,32 +1,16 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# print domains and subdomains
 
-# Function to display information about a subdomain
-display_info() {
-    sub_domain=$1
-    record_type=$2
-    destination=$3
-    echo "The subdomain $sub_domain is a $record_type record and points to $destination"
+print_domain_subdomain () {
+    dig "$1" | grep -A1 'ANSWER SECTION:' | sed -r "s/$1./$2/g" | awk -F" " ' NR==2 { print "The subdomain " $1 " is a " $4 " record and points to " $5 }'
 }
 
-# Main script
-domain=$1
-subdomain=$2
-
-# Default subdomains to check
-subdomains=("www" "lb-01" "web-01" "web-02")
-
-# If subdomain is provided, only check that subdomain
-if [ -n "$subdomain" ]; then
-    dig_output=$(dig $subdomain.$domain | awk '/ANSWER SECTION/ {getline; print}')
-    record_type=$(echo $dig_output | awk '{print $4}')
-    destination=$(echo $dig_output | awk '{print $5}')
-    display_info "$subdomain" "$record_type" "$destination"
+if [ "$#" -eq 2 ]
+then
+    print_domain_subdomain "$2.$1" "$2"
 else
-    for sub_domain in "${subdomains[@]}"
-    do
-        dig_output=$(dig $sub_domain.$domain | awk '/ANSWER SECTION/ {getline; print}')
-        record_type=$(echo $dig_output | awk '{print $4}')
-        destination=$(echo $dig_output | awk '{print $5}')
-        display_info "$sub_domain" "$record_type" "$destination"
-    done
+    print_domain_subdomain "www.$1" "www"
+    print_domain_subdomain "lb-01.$1" "lb-01"
+    print_domain_subdomain "web-01.$1" "web-01"
+    print_domain_subdomain "web-02.$1" "web-02"
 fi
