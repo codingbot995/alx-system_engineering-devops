@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# Function to display information about a subdomain
+display_info() {
+    sub_domain=$1
+    record_type=$2
+    destination=$3
+    echo "The subdomain $sub_domain is a $record_type record and points to $destination"
+}
+
+# Main script
+domain=$1
+subdomain=$2
+
+# Default subdomains to check
+subdomains=("www" "lb-01" "web-01" "web-02")
+
+# If subdomain is provided, only check that subdomain
+if [ -n "$subdomain" ]; then
+    dig_output=$(dig $subdomain.$domain | awk '/ANSWER SECTION/ {getline; print}')
+    record_type=$(echo $dig_output | awk '{print $4}')
+    destination=$(echo $dig_output | awk '{print $5}')
+    display_info "$subdomain" "$record_type" "$destination"
+else
+    for sub_domain in "${subdomains[@]}"
+    do
+        dig_output=$(dig $sub_domain.$domain | awk '/ANSWER SECTION/ {getline; print}')
+        record_type=$(echo $dig_output | awk '{print $4}')
+        destination=$(echo $dig_output | awk '{print $5}')
+        display_info "$sub_domain" "$record_type" "$destination"
+    done
+fi
